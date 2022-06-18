@@ -17,7 +17,7 @@ const Decorate = () => {
         <span className={cn(['r', style.ml])} />
         <span className={cn(['r', style.ml])} />
       </div>
-      <h1>俄罗斯方块</h1>
+      <h1>BRICK GAME</h1>
       <div className={style.view}>
         <b className="c" />
         <div className="clear" />

@@ -2,3 +2,4 @@ build
 src/static/*
 public
 dist
+config
