@@ -17,9 +17,12 @@ const levelsSlice = createSlice({
         return state - 1
       }
       return state
+    },
+    setLevels: (state, action) => {
+      return action.payload
     }
   }
 })
 
-export const { incLevels, decLevels } = levelsSlice.actions
+export const { incLevels, decLevels, setLevels } = levelsSlice.actions
 export default levelsSlice.reducer

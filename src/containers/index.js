@@ -7,7 +7,7 @@ import Music from '../components/music'
 import Pause from '../components/pause'
 import Welcome from '../components/welcome'
 import { useSelector } from 'react-redux'
-import Tetris from '../components/tetris'
+import TetrisPanel from '../components/tetris-pannel'
 import Snake from '../components/snake'
 
 const App = () => {
@@ -20,7 +20,7 @@ const App = () => {
         <Decorate />
         <div className={style.screen}>
           <div className={style.panel}>
-            {game.name === 'tetris' && <Tetris />}
+            {game.name === 'tetris' && <TetrisPanel />}
             {game.name === 'snake' && <Snake />}
             {pause === 0 && <Welcome game="TERIS" />}
             <div className={style.state}>

@@ -4,6 +4,8 @@ import music from './musicSlice'
 import pause from './pauseSlice'
 import games from './gamesSlice'
 import game from './gameSlice'
+import tetris from './tetrisSlice'
+import lock from './lockSlice'
 
 export default {
   levels,
@@ -11,5 +13,7 @@ export default {
   music,
   pause,
   games,
-  game
+  game,
+  tetris,
+  lock
 }

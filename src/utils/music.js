@@ -35,15 +35,19 @@ export const Music = {};
           return source
         }
 
-        // 游戏开始的音乐只播放一次
-        Music.killStart = () => {
-          Music.start = () => {}
-        }
+        Music.source = getSource()
+        Music.startState = false
 
         //游戏开始
         Music.start = () => {
-          Music.killStart()
+          if (Music.startState) {
+            return
+          }
           getSource().start(0, 3.7202, 3.6224)
+          Music.startState = true
+          setTimeout(() => {
+            Music.startState = false
+          }, 3622)
         }
 
         // 消除方块

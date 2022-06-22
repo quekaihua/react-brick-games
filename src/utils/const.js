@@ -1,4 +1,3 @@
-import { List } from 'immutable'
 
 const transform = (function () {
   const trans = ['transform', 'webkitTransform', 'msTransform', 'mozTransform', 'oTransform']
@@ -6,17 +5,12 @@ const transform = (function () {
   return trans.filter((e) => body.style[e] !== undefined)[0]
 }())
 
-const blankLine = Array(10).fill(0)
+const speeds = [800, 650, 500, 370, 250, 160]
 
-const blankMatrix = (() => {
-  const matrix = []
-  for (let i = 0; i < 20; i++) {
-    matrix.push(List(blankLine))
-  }
-  return List(matrix)
-})()
+const delays = [50, 60, 70, 80, 90, 100]
 
 export {
   transform,
-  blankMatrix
+  speeds,
+  delays,
 }

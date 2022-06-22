@@ -1,49 +1,66 @@
-import { decLevels, incLevels } from '../../store/reducer/levelsSlice'
-import { incSpeed, decSpeed } from '../../store/reducer/speedSlice'
+import { decLevels, incLevels, setLevels } from '../../store/reducer/levelsSlice'
+import { incSpeed, decSpeed, setSpeed } from '../../store/reducer/speedSlice'
 import { setPause } from '../../store/reducer/pauseSlice'
 import { setGame } from '../../store/reducer/gameSlice'
 import { toggle } from '../../store/reducer/musicSlice'
 import { Music } from '../../utils/music'
+import store from '../../store'
+import { setTetris } from '../../store/reducer/tetrisSlice'
+import { createNewTetris } from '../../games/tetris/tetris'
 
-const left = ({ dispatch, music }) => {
-  if (music && Music.move) {
+const left = () => {
+  const state = store.getState()
+  if (state.music && Music.move) {
     Music.move()
   }
-  dispatch(decSpeed())
+  store.dispatch(decSpeed())
 }
 
-const right = ({ dispatch, music }) => {
-  if (music && Music.move) {
+const right = () => {
+  const state = store.getState()
+  if (state.music && Music.move) {
     Music.move()
   }
-  dispatch(incSpeed())
+  store.dispatch(incSpeed())
 }
 
-const up = ({ dispatch, music }) => {
-  if (music && Music.move) {
+const up = () => {
+  const state = store.getState()
+  if (state.music && Music.move) {
     Music.move()
   }
-  dispatch(incLevels())
+  store.dispatch(incLevels())
 }
 
-const down = ({ dispatch, music }) => {
-  if (music && Music.move) {
+const down = () => {
+  const state = store.getState()
+  if (state.music && Music.move) {
     Music.move()
   }
-  dispatch(decLevels())
+  store.dispatch(decLevels())
 }
 
-const p = ({ dispatch, pause }) => {
+const p = () => {
+  const { levels, game, music, pause } = store.getState()
+  if (music && Music.start) {
+    Music.start()
+  }
   const newPause = pause === 1 ? 2 : 1
-  dispatch(setPause(newPause))
+  if (game.name === 'tetris') {
+    const newTetris = createNewTetris({ levels: levels })
+    store.dispatch(setTetris(newTetris.toJsObj()))
+  }
+  store.dispatch(setPause(newPause))
 }
 
-const s = ({ dispatch }) => {
-  dispatch(toggle())
+const s = () => {
+  store.dispatch(toggle())
 }
 
-const r = ({ dispatch }) => {
-  dispatch(setPause(0))
+const r = () => {
+  store.dispatch(setPause(0))
+  store.dispatch(setSpeed(1))
+  store.dispatch(setLevels(1))
 }
 
 const nextGameIndex = (games, game) => {
@@ -55,12 +72,13 @@ const nextGameIndex = (games, game) => {
   return idx + 1
 }
 
-const rotate = ({ dispatch, games, game, music }) => {
+const rotate = () => {
+  const { games, game, music } = store.getState()
   if (music && Music.rotate) {
     Music.rotate()
   }
   const idx = nextGameIndex(games, game)
-  dispatch(setGame(games[idx]))
+  store.dispatch(setGame(games[idx]))
 }
 
 export default {

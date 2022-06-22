@@ -1,15 +1,105 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import classnames from 'classnames'
-
 import style from './index.module.less'
-import { blankMatrix } from '../../utils/const'
+import { useDispatch, useSelector } from 'react-redux'
+import { setLock } from '../../store/reducer/lockSlice'
+import { copyData } from '../../utils/helps'
+import { Music } from '../../utils/music'
+const Matrix = ({ matrix, isDead, gameover, lines, tetrisClearLines }) => {
+  const [state, setState] = useState([])
+  const { music, pause, lock } = useSelector(state => state)
 
-const Matrix = ({ matrix }) => {
-  const data = matrix || blankMatrix
+  const dispatch = useDispatch()
 
+  const clearAnimate = () => {
+    const anima = (callback) => {
+      setTimeout(() => {
+        changeColor(0)
+        setTimeout(() => {
+          changeColor(2)
+          if (typeof callback === 'function') {
+            callback()
+          }
+        }, 50)
+      }, 50)
+    }
+    anima(() => {
+      anima(() => {
+        anima(() => {
+          setTimeout(
+            tetrisClearLines, 100
+          )
+        })
+      })
+    })
+  }
+
+  const exLine = (index) => {
+    if (index <= 19) {
+      setState((old) => {
+        const newState =  old.map((line, idx) => {
+          if(idx !== index) {
+            return line
+          } else {
+            return Array(10).fill(1)
+          }
+        })
+        return newState
+      })
+    } else if (index >= 20 && index <= 39) {
+      setState((old) => {
+        return old.map((line, idx) => {
+          if(idx !== (19-(index-20))) {
+            return line
+          } else {
+            return Array(10).fill(0)
+          }
+        })
+      })
+    } else {
+      //over
+      gameover()
+      return
+    }
+  }
+  const changeColor = (color) => {
+    setState((oldState) => {
+      return oldState.map((line,idx) => {
+        if (lines.indexOf(idx) !== -1) {
+          return Array(10).fill(color)
+        } else {
+          return line
+        }
+      })
+    })
+  }
+  useEffect(() => {
+    setState(copyData(matrix))
+    //消除行
+    console.log('lines', lines)
+    if (lines && lines.length > 0) {
+      dispatch(setLock(true))
+      if (music && Music.clear) {
+        Music.clear()
+      }
+      changeColor(2)
+      clearAnimate()
+    }
+    if (pause === 1 && isDead && !lock) {
+      dispatch(setLock(true))
+      if (music && Music.gameover) {
+        Music.gameover()
+      }
+      for (let i = 0; i <= 40; i++) {
+        setTimeout(exLine.bind(null, i), 40 * (i + 1))
+      }
+    }
+  }, [matrix])
+
+  console.log('state', state)
   return (
     <div className={style.matrix}>{
-      data.map((p, k1) => (<p key={k1}>
+      state.map((p, k1) => (<p key={k1}>
         {
           p.map((e, k2) => <b
             className={classnames({
