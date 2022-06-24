@@ -1,26 +1,24 @@
-/* eslint-disable no-unused-vars */
 import { toggle } from '../../store/reducer/musicSlice'
 import { Music } from '../../utils/music'
 import { setPause } from '../../store/reducer/pauseSlice'
 import { setLock, toggleLock } from '../../store/reducer/lockSlice'
 import { setTetris } from '../../store/reducer/tetrisSlice'
 import store from '../../store'
-import Tetris, { createNewTetris, originXY } from '../../games/tetris/tetris'
+import Tetris, { originXY } from '../../games/tetris/tetris'
 import { blockShape } from '../../games/tetris/block'
-import { setGame } from '../../store/reducer/gameSlice'
 import { setSpeed } from '../../store/reducer/speedSlice'
 import { setLevels } from '../../store/reducer/levelsSlice'
-import { setHighest } from '../../store/reducer/gamesSlice'
+import { setScore } from '../../store/reducer/gamesSlice'
 import control from '..'
 
 export const controlTetris = (type) => {
   const state = store.getState()
-  const { tetris } = state
+  const { tetris, game } = state
   const tetrisObj = new Tetris(tetris)
   const res = tetrisObj.move(type)
   if (type === 'down' && !res) {
     tetrisObj.draw()
-    store.dispatch(setGame({ score: tetrisObj.score }))
+    store.dispatch(setScore({ game, score: tetrisObj.score }))
     setSpeedAndLevels(tetrisObj.score, tetrisObj.levels)
     tetrisObj.xy = originXY
     tetrisObj.shape = blockShape[tetris.next]
@@ -32,14 +30,13 @@ export const controlTetris = (type) => {
 }
 
 export const tetrisClearLines = () => {
-  console.log('run clear time')
-  const { tetris } = store.getState()
+  const { tetris, game } = store.getState()
   const tetrisObj = new Tetris(tetris)
   tetrisObj.draw()
   tetrisObj.clear()
   tetrisObj.incLevels()
   setSpeedAndLevels(tetrisObj.score, tetrisObj.levels)
-  store.dispatch(setGame({ score: tetrisObj.score }))
+  store.dispatch(setScore({ game, score: tetrisObj.score }))
   tetrisObj.xy = originXY
   tetrisObj.shape = blockShape[tetrisObj.next] //先把next放入当前shape
   tetrisObj.next = Tetris.getNextType()
@@ -48,17 +45,12 @@ export const tetrisClearLines = () => {
 }
 
 export const gameover = () => {
-  const { levels, tetris } = store.getState()
-  const newTetris = createNewTetris({ levels: levels })
-  store.dispatch(setTetris(newTetris.toJsObj()))
   store.dispatch(setPause(0))
-  store.dispatch(setLock(false))
-  store.dispatch(setHighest({ gameName: 'tetris', score: tetris.score }))
-  const { games } = store.getState()
-  const game = games.find(game => game.name === 'tetris')
-  store.dispatch(setGame({ ...game, score: 0 }))
   store.dispatch(setSpeed(1))
   store.dispatch(setLevels(1))
+  const { game } = store.getState()
+  store.dispatch(setScore({ game, score:0 }))
+  store.dispatch(setLock(false))
 }
 
 const setSpeedAndLevels = (score, levels) => {
@@ -136,13 +128,10 @@ const s = () => {
 
 const r = () => {
   store.dispatch(setPause(0))
-  const { tetris } = store.getState()
-  store.dispatch(setHighest({ gameName: 'tetris', score: tetris.score }))
-  const { games } = store.getState()
-  const game = games.find(game => game.name === 'tetris')
-  store.dispatch(setGame({ ...game, score: 0 }))
   store.dispatch(setSpeed(1))
   store.dispatch(setLevels(1))
+  const { game } = store.getState()
+  store.dispatch(setScore({ game, score:0 }))
 }
 
 export default {

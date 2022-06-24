@@ -45,4 +45,9 @@ const games = {
   ],
 }
 
+export const initGameData = [
+  { name: 'tetris', highest: 0, score: 0 },
+  { name: 'snake', highest: 0, score: 0 }
+]
+
 export default games

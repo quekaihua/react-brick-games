@@ -43,15 +43,15 @@ const down = () => {
 }
 
 const p = () => {
-  const { levels, game, music, pause } = store.getState()
+  const { levels, games, game, music, pause } = store.getState()
   if (music && Music.start) {
     Music.start()
   }
   const newPause = pause === 1 ? 2 : 1
-  if (game.name === 'tetris') {
+  if (games[game].name === 'tetris') {
     const newTetris = createNewTetris({ levels: levels })
     store.dispatch(setTetris(newTetris.toJsObj()))
-  } else if(game.name === 'snake') {
+  } else if(games[game].name === 'snake') {
     const newSnake = createNewSnake({ levels: levels })
     store.dispatch(setSnake(newSnake.toJsObj()))
   }
@@ -69,8 +69,7 @@ const r = () => {
 }
 
 const nextGameIndex = (games, game) => {
-  console.log(games, game)
-  let idx = games.findIndex((g) => g.name === game.name)
+  let idx = game
   if (idx === games.length - 1) {
     return 0
   }
@@ -83,7 +82,7 @@ const rotate = () => {
     Music.rotate()
   }
   const idx = nextGameIndex(games, game)
-  store.dispatch(setGame(games[idx]))
+  store.dispatch(setGame(idx))
 }
 
 export default {

@@ -6,15 +6,15 @@ import Number from '../components/number'
 import Music from '../components/music'
 import Pause from '../components/pause'
 import Welcome from '../components/welcome'
-import { useSelector } from 'react-redux'
+import { shallowEqual, useSelector } from 'react-redux'
 import TetrisPanel from '../components/tetris-panel'
 import SnakePanel from '../components/snake-panel'
 import { transform } from '../utils/const'
 import Logo from '../components/logo'
 
 const App = () => {
-  const state = useSelector((state) => state)
-  const { levels, speed, music, pause, game } = state
+  const state = useSelector((state) => state, shallowEqual)
+  const { levels, speed, music, pause, game, games } = state
 
   const [w, setW] = useState(document.documentElement.clientWidth)
   const [h, setH] = useState(document.documentElement.clientHeight)
@@ -51,8 +51,8 @@ const App = () => {
         <Decorate />
         <div className={style.screen}>
           <div className={style.panel}>
-            {game.name === 'tetris' && <TetrisPanel />}
-            {game.name === 'snake' && <SnakePanel />}
+            {games[game].name === 'tetris' && <TetrisPanel />}
+            {games[game].name === 'snake' && <SnakePanel />}
             {pause === 0 && <Welcome game="TERIS" />}
             <div className={style.state}>
               {
@@ -60,12 +60,12 @@ const App = () => {
                   ?
                   <>
                     <p>HI-SCORE</p>
-                    <Number number={game.highest} length={6} />
+                    <Number number={games[game].highest} length={6} />
                   </>
                   :
                   <>
                     <p>SCORE</p>
-                    <Number number={game.score} length={6} />
+                    <Number number={games[game].score} length={6} />
                   </>
               }
               <p>levels</p>

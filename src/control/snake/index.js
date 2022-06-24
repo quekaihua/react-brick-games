@@ -1,24 +1,19 @@
-/* eslint-disable no-unused-vars */
 import { toggle } from '../../store/reducer/musicSlice'
 import { Music } from '../../utils/music'
 import { setPause } from '../../store/reducer/pauseSlice'
 import { setLock, toggleLock } from '../../store/reducer/lockSlice'
-import { setTetris } from '../../store/reducer/tetrisSlice'
 import store from '../../store'
-import Tetris, { createNewTetris, originXY } from '../../games/tetris/tetris'
-import { blockShape } from '../../games/tetris/block'
-import { setGame } from '../../store/reducer/gameSlice'
 import { setSpeed } from '../../store/reducer/speedSlice'
 import { setLevels } from '../../store/reducer/levelsSlice'
-import { setHighest } from '../../store/reducer/gamesSlice'
+import { addScore, setScore } from '../../store/reducer/gamesSlice'
 import { setSnake } from '../../store/reducer/snakeSlice'
-import Snake, { createNewSnake } from '../../games/snake/snake'
+import Snake from '../../games/snake/snake'
 import control from '..'
 
 export const controlSnake = (type) => {
   if (type==='') {return }
   const state = store.getState()
-  const { snake, music, levels, game } = state
+  const { snake, music, levels, game, games } = state
   const snakeObj = new Snake(snake)
   snakeObj.direction = type
   let [x, y] = snakeObj.getNextXY()
@@ -28,35 +23,34 @@ export const controlSnake = (type) => {
   }
   const res = snakeObj.move()
 
-  let score = game.score
+  let score = games[game].score
   let newLevels = levels
   if (res) { //eat food
     score += 100
     newLevels++
-    store.dispatch(setGame({ score: game.score + 100 })) //+100分
+    store.dispatch(addScore({ game, score:100 })) //+100分
     if (music && Music.clear) {
       Music.clear()
     }
   } else {
     score += 10
-    store.dispatch(setGame({ score: game.score + 10 }))
+    store.dispatch(addScore({ game, score:10 }))
   }
   setSpeedAndLevels(score, newLevels)
   store.dispatch(setSnake(snakeObj.toJsObj()))
 }
 
 export const gameover = () => {
-  const { games, game } = store.getState()
   store.dispatch(setLevels(1))
   store.dispatch(setSpeed(1))
   store.dispatch(setPause(0))
+  const { game } = store.getState()
+  store.dispatch(setScore({ game, score:0 }))
   store.dispatch(setLock(false))
-  store.dispatch(setHighest({ gameName: 'snake', score: game.score }))
-  store.dispatch(setGame({ ...games.find(game => game.name === 'snake'),score: 0 }))
 }
 
 const setSpeedAndLevels = (score, levels) => {
-  let speed = Math.ceil(score / 1500)
+  let speed = Math.ceil(score / 3000)
   store.dispatch(setSpeed(speed))
   store.dispatch(setLevels(levels))
 }
@@ -123,6 +117,10 @@ const s = () => {
 
 const r = () => {
   store.dispatch(setPause(0))
+  store.dispatch(setSpeed(1))
+  store.dispatch(setLevels(1))
+  const { game } = store.getState()
+  store.dispatch(setScore({ game, score:0 }))
 }
 
 export default {

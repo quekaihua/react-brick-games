@@ -1,26 +1,38 @@
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import cn from 'classnames'
 import style from './index.module.less'
 import { transform } from '../../../utils/const'
 import control from '../../../control'
-import { useSelector } from 'react-redux'
+import { shallowEqual, useSelector } from 'react-redux'
 import { isMobile } from '../../../utils/helps'
+import { initGameData } from '../../../utils/games'
 
 const Button = ({ color, size, top, left, label, position, arrow, type }) => {
   const [active, setActive] = useState(false)
-  const { pause, game } = useSelector((state) => ({
-    pause: state.pause,
-    game: state.game,
-  }))
-  const handleDown = () => {
-    setActive(true)
-    console.log(pause, game)
-    if (pause === 0) {
-      control['todo'][type]()
-    } else {
-      control[game.name][type]()
-    }
-  }
+  const pause = useSelector(state => state.pause, shallowEqual)
+  const game = useSelector(state => state.game, shallowEqual)
+
+  const memoHandleDown = useCallback(
+    () => {
+      setActive(true)
+      if (pause === 0) {
+        control['todo'][type]()
+      } else {
+        control[initGameData[game].name][type]()
+      }
+    },
+    [pause, game.name]
+  )
+
+  // const handledown = () => {
+  //   setActive(true)
+  //   console.log(type, 'handledown', pause, game)
+  //   if (pause === 0) {
+  //     control['todo'][type]()
+  //   } else {
+  //     control[initGameData[game].name][type]()
+  //   }
+  // }
 
   const handleUp = () => {
     setActive(false)
@@ -37,7 +49,7 @@ const Button = ({ color, size, top, left, label, position, arrow, type }) => {
           [style[size]]: true,
         })}
         style={{ top, left }}
-        onTouchStart={handleDown}
+        onTouchStart={memoHandleDown}
         onTouchEnd={handleUp}
       >
         <i className={cn({ [style.active]: active })}/>
@@ -59,7 +71,7 @@ const Button = ({ color, size, top, left, label, position, arrow, type }) => {
           [style[size]]: true,
         })}
         style={{ top, left }}
-        onMouseDown={handleDown}
+        onMouseDown={memoHandleDown}
         onMouseUp={handleUp}
       >
         <i className={cn({ [style.active]: active })}/>
