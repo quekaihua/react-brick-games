@@ -11,6 +11,7 @@ import { setGame } from '../../store/reducer/gameSlice'
 import { setSpeed } from '../../store/reducer/speedSlice'
 import { setLevels } from '../../store/reducer/levelsSlice'
 import { setHighest } from '../../store/reducer/gamesSlice'
+import control from '..'
 
 export const controlTetris = (type) => {
   const state = store.getState()
@@ -19,7 +20,6 @@ export const controlTetris = (type) => {
   const res = tetrisObj.move(type)
   if (type === 'down' && !res) {
     tetrisObj.draw()
-    console.log('tetris.draw', tetrisObj)
     store.dispatch(setGame({ score: tetrisObj.score }))
     setSpeedAndLevels(tetrisObj.score, tetrisObj.levels)
     tetrisObj.xy = originXY
@@ -32,10 +32,12 @@ export const controlTetris = (type) => {
 }
 
 export const tetrisClearLines = () => {
+  console.log('run clear time')
   const { tetris } = store.getState()
   const tetrisObj = new Tetris(tetris)
   tetrisObj.draw()
   tetrisObj.clear()
+  tetrisObj.incLevels()
   setSpeedAndLevels(tetrisObj.score, tetrisObj.levels)
   store.dispatch(setGame({ score: tetrisObj.score }))
   tetrisObj.xy = originXY
@@ -60,7 +62,7 @@ export const gameover = () => {
 }
 
 const setSpeedAndLevels = (score, levels) => {
-  let speed = Math.ceil(score / 1000)
+  let speed = Math.ceil(score / 3000)
   store.dispatch(setSpeed(speed))
   store.dispatch(setLevels(levels))
 }
@@ -72,6 +74,7 @@ const left = () => {
     Music.move()
   }
   controlTetris('left')
+  control.eventLoop.left = setTimeout(left, 100)
 }
 
 const right = () => {
@@ -81,6 +84,7 @@ const right = () => {
     Music.move()
   }
   controlTetris('right')
+  control.eventLoop.right = setTimeout(right, 100)
 }
 
 const up = () => {
@@ -104,6 +108,8 @@ const down = () => {
     Music.move()
   }
   controlTetris('down')
+
+  control.eventLoop.down = setTimeout(down, 100)
 }
 
 const rotate = () => {
@@ -117,6 +123,8 @@ const rotate = () => {
 
 const p = () => {
   const state = store.getState()
+  const tetris = new Tetris(state.tetris)
+  if (state.lock && tetris.isDead()) return
   const newPause = state.pause === 1 ? 2 : 1
   store.dispatch(setPause(newPause))
   store.dispatch(toggleLock())

@@ -11,52 +11,52 @@ import { setGame } from '../../store/reducer/gameSlice'
 import { setSpeed } from '../../store/reducer/speedSlice'
 import { setLevels } from '../../store/reducer/levelsSlice'
 import { setHighest } from '../../store/reducer/gamesSlice'
+import { setSnake } from '../../store/reducer/snakeSlice'
+import Snake, { createNewSnake } from '../../games/snake/snake'
+import control from '..'
 
-export const controlTetris = (type) => {
+export const controlSnake = (type) => {
+  if (type==='') {return }
   const state = store.getState()
-  const { tetris } = state
-  const tetrisObj = new Tetris(tetris)
-  const res = tetrisObj.move(type)
-  if (type === 'down' && !res) {
-    tetrisObj.draw()
-    console.log('tetris.draw', tetrisObj)
-    store.dispatch(setGame({ score: tetrisObj.score }))
-    setSpeedAndLevels(tetrisObj.score, tetrisObj.levels)
-    tetrisObj.xy = originXY
-    tetrisObj.shape = blockShape[tetris.next]
-    tetrisObj.next = Tetris.getNextType()
+  const { snake, music, levels, game } = state
+  const snakeObj = new Snake(snake)
+  snakeObj.direction = type
+  let [x, y] = snakeObj.getNextXY()
+  //反向
+  if (x===snakeObj.bodies[1][0] && y===snakeObj.bodies[1][1]) {
+    return false
   }
+  const res = snakeObj.move()
 
-  store.dispatch(setTetris(tetrisObj.toJsObj()))
-  return res
-}
-
-export const tetrisClearLines = () => {
-  const { tetris } = store.getState()
-  const tetrisObj = new Tetris(tetris)
-  tetrisObj.draw()
-  tetrisObj.clear()
-  setSpeedAndLevels(tetrisObj.score, tetrisObj.levels)
-  store.dispatch(setGame({ score: tetrisObj.score }))
-  tetrisObj.xy = originXY
-  tetrisObj.shape = blockShape[tetrisObj.next] //先把next放入当前shape
-  tetrisObj.next = Tetris.getNextType()
-  store.dispatch(setTetris(tetrisObj.toJsObj()))
-  store.dispatch(setLock(false))
+  let score = game.score
+  let newLevels = levels
+  if (res) { //eat food
+    score += 100
+    newLevels++
+    store.dispatch(setGame({ score: game.score + 100 })) //+100分
+    if (music && Music.clear) {
+      Music.clear()
+    }
+  } else {
+    score += 10
+    store.dispatch(setGame({ score: game.score + 10 }))
+  }
+  setSpeedAndLevels(score, newLevels)
+  store.dispatch(setSnake(snakeObj.toJsObj()))
 }
 
 export const gameover = () => {
-  const { levels, tetris, games } = store.getState()
-  const newTetris = createNewTetris({ levels: levels })
-  store.dispatch(setTetris(newTetris.toJsObj()))
+  const { games, game } = store.getState()
+  store.dispatch(setLevels(1))
+  store.dispatch(setSpeed(1))
   store.dispatch(setPause(0))
   store.dispatch(setLock(false))
-  store.dispatch(setHighest({ gameName: 'tetris', score: tetris.score }))
-  store.dispatch(setGame(games.find(game => game.name === 'tetris')))
+  store.dispatch(setHighest({ gameName: 'snake', score: game.score }))
+  store.dispatch(setGame({ ...games.find(game => game.name === 'snake'),score: 0 }))
 }
 
 const setSpeedAndLevels = (score, levels) => {
-  let speed = Math.ceil(score / 1000)
+  let speed = Math.ceil(score / 1500)
   store.dispatch(setSpeed(speed))
   store.dispatch(setLevels(levels))
 }
@@ -67,7 +67,8 @@ const left = () => {
   if (state.music && Music.move) {
     Music.move()
   }
-  controlTetris('left')
+  controlSnake('left')
+  control.eventLoop.left = setTimeout(left, 100)
 }
 
 const right = () => {
@@ -76,21 +77,18 @@ const right = () => {
   if (state.music && Music.move) {
     Music.move()
   }
-  controlTetris('right')
+  controlSnake('right')
+  control.eventLoop.right = setTimeout(right, 100)
 }
 
 const up = () => {
   const state = store.getState()
   if (state.lock) return
-  if (state.music && Music.fall) {
-    Music.fall()
+  if (state.music && Music.move) {
+    Music.move()
   }
-  let tetris = new Tetris(state.tetris)
-  while(tetris.checkMove('down')) {
-    controlTetris('down')
-    const nextTetris = store.getState().tetris
-    tetris = new Tetris(nextTetris)
-  }
+  controlSnake('up')
+  control.eventLoop.up = setTimeout(up, 100)
 }
 
 const down = () => {
@@ -99,20 +97,21 @@ const down = () => {
   if (state.music && Music.move) {
     Music.move()
   }
-  controlTetris('down')
+  controlSnake('down')
+  control.eventLoop.down = setTimeout(down, 100)
 }
 
 const rotate = () => {
-  const state = store.getState()
-  if (state.lock) return
-  if (state.music && Music.rotate) {
-    Music.rotate()
-  }
-  controlTetris('rotate')
+  // const state = store.getState()
+  // if (state.lock) return
+  // if (state.music && Music.rotate) {
+  //   Music.rotate()
+  // }
 }
 
 const p = () => {
   const state = store.getState()
+  if (state.lock && state.snake.death) return
   const newPause = state.pause === 1 ? 2 : 1
   store.dispatch(setPause(newPause))
   store.dispatch(toggleLock())

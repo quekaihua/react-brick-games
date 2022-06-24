@@ -7,6 +7,8 @@ import { Music } from '../../utils/music'
 import store from '../../store'
 import { setTetris } from '../../store/reducer/tetrisSlice'
 import { createNewTetris } from '../../games/tetris/tetris'
+import { setSnake } from '../../store/reducer/snakeSlice'
+import { createNewSnake } from '../../games/snake/snake'
 
 const left = () => {
   const state = store.getState()
@@ -49,6 +51,9 @@ const p = () => {
   if (game.name === 'tetris') {
     const newTetris = createNewTetris({ levels: levels })
     store.dispatch(setTetris(newTetris.toJsObj()))
+  } else if(game.name === 'snake') {
+    const newSnake = createNewSnake({ levels: levels })
+    store.dispatch(setSnake(newSnake.toJsObj()))
   }
   store.dispatch(setPause(newPause))
 }

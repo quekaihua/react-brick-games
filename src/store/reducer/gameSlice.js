@@ -7,7 +7,6 @@ const gameSlice = createSlice({
   initialState,
   reducers: {
     setGame: (state, action) => {
-      console.log('payload', action.payload)
       return {
         ...state,
         ...action.payload

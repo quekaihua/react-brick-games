@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import style from './index.module.less'
 import Decorate from '../components/decorate'
 import Keyboard from '../components/keybord'
@@ -7,21 +7,52 @@ import Music from '../components/music'
 import Pause from '../components/pause'
 import Welcome from '../components/welcome'
 import { useSelector } from 'react-redux'
-import TetrisPanel from '../components/tetris-pannel'
-import Snake from '../components/snake'
+import TetrisPanel from '../components/tetris-panel'
+import SnakePanel from '../components/snake-panel'
+import { transform } from '../utils/const'
+import Logo from '../components/logo'
 
 const App = () => {
   const state = useSelector((state) => state)
   const { levels, speed, music, pause, game } = state
 
+  const [w, setW] = useState(document.documentElement.clientWidth)
+  const [h, setH] = useState(document.documentElement.clientHeight)
+
+  useEffect(() => {
+    window.addEventListener('resize', () => {
+      setW(document.documentElement.clientWidth)
+      setH(document.documentElement.clientHeight)
+    })
+  }, [w, h])
+  let filling = 0
+  const size = (() => {
+    const ratio = h / w
+    let scale
+    let css = {}
+    if (ratio < 1.5) {
+      scale = h / 960
+    } else {
+      scale = w / 640
+      filling = (h - (960 * scale)) / scale / 3
+      css = {
+        paddingTop: Math.floor(filling) + 42,
+        paddingBottom: Math.floor(filling),
+        marginTop: Math.floor(-480 - (filling * 1.5)),
+      }
+    }
+    css[transform] = `scale(${scale})`
+    return css
+  })()
+
   return (
-    <div className={style.app}>
+    <div className={style.app} style={size}>
       <div className={style.rect}>
         <Decorate />
         <div className={style.screen}>
           <div className={style.panel}>
             {game.name === 'tetris' && <TetrisPanel />}
-            {game.name === 'snake' && <Snake />}
+            {game.name === 'snake' && <SnakePanel />}
             {pause === 0 && <Welcome game="TERIS" />}
             <div className={style.state}>
               {
@@ -41,6 +72,7 @@ const App = () => {
               <Number number={levels} length={6} />
               <p>speed</p>
               <Number number={speed} length={1} />
+              {pause===0 && <Logo/>}
               <div className={style.bottom}>
                 <Music music={music} />
                 <Pause pause={pause} />

@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client'
 import { Provider } from 'react-redux'
 import App from './containers'
 import store from './store'
+import './control/keyboad'
 
 console.log(store.getState())
 const root = ReactDOM.createRoot(document.getElementById('root'))

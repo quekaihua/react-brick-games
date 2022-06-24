@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-import { arrayShuffle } from '../../utils/helps'
 import { blockType, blockShape } from './block'
 //初始坐标
 export const originXY = [-2, 4]
@@ -10,9 +8,6 @@ export const speeds = [800, 650, 500, 370, 250, 160]
 const blankLine = Array(10).fill(0)
 export const blankMatrix = (() => {
   const matrix = Array(20).fill(blankLine)
-  // for (let i = 0; i < 20; i++) {
-  //   matrix.push(blankLine)
-  // }
   return matrix
 })()
 
@@ -21,7 +16,7 @@ export const initMatrix = (levels) => {
   if (levels > 10) {
     levels = 10
   }
-  while(levels--) {
+  for(let i=0; i<levels; i++) {
     res.push(initLines())
   }
   while(res.length<20) {
@@ -34,7 +29,9 @@ const initLines = () => {
   //4~8个1
   let n = Math.floor(Math.random()*4)+4
   let lines = Array(n).fill(1).concat(Array(10-n).fill(0))
-  lines = arrayShuffle(lines)
+  lines.sort(() => {
+    return .5 - Math.random()
+  })
   return lines
 }
 
@@ -67,25 +64,17 @@ class Tetris {
   }
 
   incLevels() {
-    if (this.levels < 10) {
-      this.levels++
-    }
+    this.levels++
   }
 
   decLevels() {
-    if (this.levels > 1) {
-      this.levels--
-    }
+    this.levels--
   }
 
   levelsToScore() {
     const res =  this.levels * 2
     //等级越高，加分越多，最高加12分
     return res > 12 ? 12 : res
-  }
-
-  scoreTolevels() {
-    return Math.ceil(this.score / 1000)
   }
 
   // 是否达到消除状态
@@ -104,7 +93,6 @@ class Tetris {
 
   //消除
   clear() {
-    // console.log('before clear:', this.matrix)
     this.matrix = this.matrix.filter(line => !line.every(n => !!n))
     let lines = this.matrix.length
     this.score += addScores[20-lines]
@@ -115,7 +103,6 @@ class Tetris {
       this.matrix.unshift(Array(10).fill(0))
       lines++
     }
-    // console.log('after clear:', this.matrix)
     return true
   }
 
@@ -130,7 +117,6 @@ class Tetris {
   //移动前检测
   checkMove(action) {
     const nextXY = this.getNextXY(action)
-    // console.log(nextXY, this.shape, this.copyData(this.matrix))
     let shape = this.shape
     if (action === 'rotate') {
       shape = this.rotate()
@@ -191,8 +177,6 @@ class Tetris {
   }
   move(action = 'down') {
     const nextXY = this.getNextXY(action)
-
-    // console.log('checkMove: curxy', this.xy, this.checkMove(action))
     if (!this.checkMove(action)) {
       return false
     }
@@ -216,7 +200,6 @@ class Tetris {
       }
     }
     this.score += this.levelsToScore()
-    this.levels = this.scoreTolevels()
   }
 
   rotate(){
@@ -264,13 +247,14 @@ class Tetris {
       xy: this.xy,
       next: this.next,
       shape: this.shape,
-      score: this.score
+      score: this.score,
+      levels: this.levels
     }
   }
 
   static getNextType() {
-    return 'O'
-    // return blockType[Math.floor(Math.random() * blockType.length)]
+    // return 'O'
+    return blockType[Math.floor(Math.random() * blockType.length)]
   }
 
 }

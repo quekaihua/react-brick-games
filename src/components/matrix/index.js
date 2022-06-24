@@ -59,6 +59,7 @@ const Matrix = ({ matrix, isDead, gameover, lines, tetrisClearLines }) => {
     } else {
       //over
       gameover()
+      dispatch(setLock(false))
       return
     }
   }
@@ -76,8 +77,7 @@ const Matrix = ({ matrix, isDead, gameover, lines, tetrisClearLines }) => {
   useEffect(() => {
     setState(copyData(matrix))
     //消除行
-    console.log('lines', lines)
-    if (lines && lines.length > 0) {
+    if (lines &&  lines.length > 0 && !lock) {
       dispatch(setLock(true))
       if (music && Music.clear) {
         Music.clear()
@@ -96,7 +96,6 @@ const Matrix = ({ matrix, isDead, gameover, lines, tetrisClearLines }) => {
     }
   }, [matrix])
 
-  console.log('state', state)
   return (
     <div className={style.matrix}>{
       state.map((p, k1) => (<p key={k1}>

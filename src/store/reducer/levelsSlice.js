@@ -13,7 +13,7 @@ const levelsSlice = createSlice({
       return state
     },
     decLevels: state => {
-      if (state > 0) {
+      if (state > 1) {
         return state - 1
       }
       return state

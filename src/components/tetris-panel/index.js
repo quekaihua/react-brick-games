@@ -14,7 +14,6 @@ const TetrisPanel = () => {
     if (pause === 1 && !lock) {
       const timer = setInterval(() => {
         controlTetris('down')
-        console.log('lock in useEffect', lock)
         if(lock) {
           clearInterval(timer)
         }
@@ -32,7 +31,6 @@ const TetrisPanel = () => {
     matrix = copyData(games.tetris)
   } else {
     //build shape
-    console.log('in pannel', tetrisObj)
     for(let i=0; i<tetrisObj.shape.length; i++) {
       for (let j=0; j<tetrisObj.shape[0].length; j++) {
         //绘制新位置
@@ -56,7 +54,7 @@ const TetrisPanel = () => {
   return (
     <>
       <Matrix matrix={matrix} isDead={tetrisObj.isDead()} gameover={gameover} tetrisClearLines={tetrisClearLines} lines={lines} pause={pause}/>
-      <Next />
+      {pause !==0 && <Next />}
     </>
   )
 }
