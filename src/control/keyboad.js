@@ -1,5 +1,6 @@
 import store from '../store'
 import control from '.'
+import { initGameData } from '../utils/games'
 
 const keyboard = {
   37: 'left',
@@ -29,7 +30,7 @@ const keyDown = (e) => {
   if (pause === 0) {
     control['todo'][type]()
   } else {
-    control[game.name][type]()
+    control[initGameData[game].name][type]()
   }
 }
 
@@ -39,6 +40,7 @@ const keyUp = (e) => {
   }
   const type = keyboard[e.keyCode]
   if (type === keydownActive) {
+    control.clearLoop(type)
     keydownActive = ''
   }
 }

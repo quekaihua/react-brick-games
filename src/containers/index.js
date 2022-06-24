@@ -11,6 +11,7 @@ import TetrisPanel from '../components/tetris-panel'
 import SnakePanel from '../components/snake-panel'
 import { transform } from '../utils/const'
 import Logo from '../components/logo'
+import Guide from '../components/guide'
 
 const App = () => {
   const state = useSelector((state) => state, shallowEqual)
@@ -82,7 +83,8 @@ const App = () => {
           </div>
         </div>
       </div>
-      <Keyboard />
+      <Keyboard filling={filling}/>
+      <Guide/>
     </div>
   )
 }

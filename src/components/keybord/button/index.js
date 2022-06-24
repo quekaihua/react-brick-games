@@ -60,6 +60,7 @@ const Button = ({ color, size, top, left, label, position, arrow, type }) => {
             }}
           />
         )}
+        <span className={cn({ [style.position]: position })}>{label}</span>
       </div>
     )
   } else {
