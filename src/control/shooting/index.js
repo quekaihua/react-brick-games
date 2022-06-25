@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { toggle } from '../../store/reducer/musicSlice'
 import { Music } from '../../utils/music'
 import { setPause } from '../../store/reducer/pauseSlice'
@@ -6,38 +7,29 @@ import store from '../../store'
 import { setSpeed } from '../../store/reducer/speedSlice'
 import { setLevels } from '../../store/reducer/levelsSlice'
 import { addScore, setScore } from '../../store/reducer/gamesSlice'
-import { setSnake } from '../../store/reducer/snakeSlice'
-import Snake from '../../games/snake/snake'
 import control from '..'
+import Shooting from '../../games/shooting/shooting'
+import { setShooting } from '../../store/reducer/shootingSlice'
 
-export const controlSnake = (type) => {
+export const controlShooting = (type) => {
   if (type==='') {return }
   const state = store.getState()
-  const { snake, music, levels, game, games } = state
-  const snakeObj = new Snake(snake)
-  snakeObj.direction = type
-  let [x, y] = snakeObj.getNextXY()
-  //反向
-  if (x===snakeObj.bodies[1][0] && y===snakeObj.bodies[1][1]) {
-    return false
+  const { shooting, games, game, levels, music } = state
+  if(music && Music.run) {
+    Music.run()
   }
-  const res = snakeObj.move()
-
-  let score = games[game].score
-  let newLevels = levels
-  if (res) { //eat food
-    score += 100
-    newLevels++
-    store.dispatch(addScore({ game, score:100 })) //+100分
-    if (music && Music.clear) {
-      Music.clear()
+  const shootingObj = new Shooting(shooting)
+  if (type === 'up') {
+    if (shootingObj.run()) {
+      let score = games[game].score
+      score += 10
+      store.dispatch(addScore({ game, score: 10 }))
+      setSpeedAndLevels(score, levels)
     }
   } else {
-    score += 10
-    store.dispatch(addScore({ game, score:10 }))
+    shootingObj.move(type)
   }
-  setSpeedAndLevels(score, newLevels)
-  store.dispatch(setSnake(snakeObj.toJsObj()))
+  store.dispatch(setShooting(shootingObj.toJsObj()))
 }
 
 export const gameover = () => {
@@ -64,7 +56,7 @@ const left = () => {
   if (state.music && Music.move) {
     Music.move()
   }
-  controlSnake('left')
+  controlShooting('left')
   control.eventLoop.left = setTimeout(left, 100)
 }
 
@@ -74,7 +66,7 @@ const right = () => {
   if (state.music && Music.move) {
     Music.move()
   }
-  controlSnake('right')
+  controlShooting('right')
   control.eventLoop.right = setTimeout(right, 100)
 }
 
@@ -84,7 +76,7 @@ const up = () => {
   if (state.music && Music.move) {
     Music.move()
   }
-  controlSnake('up')
+  controlShooting('up')
   control.eventLoop.up = setTimeout(up, 100)
 }
 
@@ -94,16 +86,35 @@ const down = () => {
   if (state.music && Music.move) {
     Music.move()
   }
-  controlSnake('down')
-  control.eventLoop.down = setTimeout(down, 100)
 }
 
 const rotate = () => {
-  // const state = store.getState()
-  // if (state.lock) return
-  // if (state.music && Music.rotate) {
-  //   Music.rotate()
-  // }
+  const state = store.getState()
+  if (state.lock) return
+  if (state.music && Music.rotate) {
+    Music.rotate()
+  }
+  // store.dispatch(setLock(true))
+  const { shooting, games, game, levels } = state
+  const shootingObj = new Shooting(shooting)
+  shootingObj.shoot()
+  store.dispatch(setShooting(shootingObj.toJsObj()))
+  setTimeout(() => {
+    const { shooting } = store.getState()
+    const newObj = new Shooting(shooting)
+    const res = newObj.shootStone()
+    let score = games[game].score
+    let newLevels = levels
+    if (res) {
+      newLevels++
+      score += 100
+      store.dispatch(addScore({ game, score: 100 }))
+      setSpeedAndLevels(score, newLevels)
+    }
+    newObj.stopShoot()
+    store.dispatch(setShooting(newObj.toJsObj()))
+    // store.dispatch(setLock(false))
+  }, 100)
 }
 
 const p = () => {

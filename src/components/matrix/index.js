@@ -104,6 +104,11 @@ const Matrix = ({ matrix, isDead, gameover, lines, tetrisClearLines }) => {
             className={classnames({
               c: e === 1,
               d: e === 2,
+              e: e === 3,
+              f: e === 4,
+              g: e === 5,
+              h: e === 6,
+              i: e === 7,
             })}
             key={k2}
           />)

@@ -9,6 +9,8 @@ import { setTetris } from '../../store/reducer/tetrisSlice'
 import { createNewTetris } from '../../games/tetris/tetris'
 import { setSnake } from '../../store/reducer/snakeSlice'
 import { createNewSnake } from '../../games/snake/snake'
+import { setShooting } from '../../store/reducer/shootingSlice'
+import { createNewShooting } from '../../games/shooting/shooting'
 
 const left = () => {
   const state = store.getState()
@@ -54,6 +56,9 @@ const p = () => {
   } else if(games[game].name === 'snake') {
     const newSnake = createNewSnake({ levels: levels })
     store.dispatch(setSnake(newSnake.toJsObj()))
+  } else if(games[game].name === 'shooting') {
+    const newShooting = createNewShooting({ levels: levels })
+    store.dispatch(setShooting(newShooting.toJsObj()))
   }
   store.dispatch(setPause(newPause))
 }

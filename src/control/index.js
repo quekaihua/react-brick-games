@@ -1,6 +1,7 @@
 import todo from './todo'
 import snake from './snake'
 import tetris from './tetris'
+import shooting from './shooting'
 
 //长按
 const eventLoop = {}
@@ -14,6 +15,7 @@ export default {
   todo,
   snake,
   tetris,
+  shooting,
   eventLoop,
   clearLoop
 }

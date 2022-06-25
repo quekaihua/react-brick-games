@@ -3,6 +3,7 @@ import QRCode from 'qrcode'
 import style from './index.module.less'
 import { isMobile } from '../../utils/helps'
 import { transform } from '../../utils/const'
+import cn from 'classnames'
 
 const Guide = () => {
   if (isMobile()) {
@@ -21,7 +22,7 @@ const Guide = () => {
   return (
     <div >
       <div className={`${style.guide} ${style.right}`}>
-        <div className={style.up}>
+        <div className={cn({ [style.up]: true, [style.active]: true })}>
           <em style={{ [transform]: 'translate(0,-3px) scale(1,2)' }} />
         </div>
         <div className={style.left}>
@@ -34,6 +35,10 @@ const Guide = () => {
         </div>
       </div>
       <div className={`${style.guide} ${style.left}`}>
+        <p>
+          <h3>查看源码:</h3>
+          <a href="https://github.com/quekaihua/react-brick-games" >https://github.com/quekaihua/react-brick-games</a>
+        </p>
         <div className={style.space}>SPACE</div>
       </div>
       { dataUrl !== '' ? (

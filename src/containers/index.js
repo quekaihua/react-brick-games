@@ -9,6 +9,7 @@ import Welcome from '../components/welcome'
 import { shallowEqual, useSelector } from 'react-redux'
 import TetrisPanel from '../components/tetris-panel'
 import SnakePanel from '../components/snake-panel'
+import ShootingPanel from '../components/shooting-panel'
 import { transform } from '../utils/const'
 import Logo from '../components/logo'
 import Guide from '../components/guide'
@@ -54,7 +55,8 @@ const App = () => {
           <div className={style.panel}>
             {games[game].name === 'tetris' && <TetrisPanel />}
             {games[game].name === 'snake' && <SnakePanel />}
-            {pause === 0 && <Welcome game="TERIS" />}
+            {games[game].name === 'shooting' && <ShootingPanel />}
+            {pause === 0 && <Welcome game={games[game].name.toUpperCase()} />}
             <div className={style.state}>
               {
                 pause === 0
