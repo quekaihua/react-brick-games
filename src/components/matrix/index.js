@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { setLock } from '../../store/reducer/lockSlice'
 import { copyData } from '../../utils/helps'
 import { Music } from '../../utils/music'
+import PropTypes from 'prop-types'
 const Matrix = ({ matrix, isDead, gameover, lines, tetrisClearLines }) => {
   const [state, setState] = useState([])
   const { music, pause, lock } = useSelector(state => state)
@@ -117,6 +118,13 @@ const Matrix = ({ matrix, isDead, gameover, lines, tetrisClearLines }) => {
     }
     </div>
   )
+}
+Matrix.propTypes = {
+  matrix: PropTypes.array.isRequired,
+  isDead: PropTypes.bool.isRequired,
+  gameover: PropTypes.func.isRequired,
+  lines: PropTypes.array,
+  tetrisClearLines: PropTypes.func
 }
 
 export default Matrix

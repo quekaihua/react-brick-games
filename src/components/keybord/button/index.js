@@ -6,6 +6,7 @@ import control from '../../../control'
 import { shallowEqual, useSelector } from 'react-redux'
 import { isMobile } from '../../../utils/helps'
 import { initGameData } from '../../../utils/games'
+import PropTypes from 'prop-types'
 
 const Button = ({ color, size, top, left, label, position, arrow, type }) => {
   const [active, setActive] = useState(false)
@@ -24,20 +25,13 @@ const Button = ({ color, size, top, left, label, position, arrow, type }) => {
     [pause, game.name]
   )
 
-  // const handledown = () => {
-  //   setActive(true)
-  //   console.log(type, 'handledown', pause, game)
-  //   if (pause === 0) {
-  //     control['todo'][type]()
-  //   } else {
-  //     control[initGameData[game].name][type]()
-  //   }
-  // }
-
-  const handleUp = () => {
-    setActive(false)
-    control.clearLoop(type)
-  }
+  const memoHandleUp = useCallback(
+    () => {
+      setActive(false)
+      control.clearLoop()
+    },
+    []
+  )
 
   let rendered = null
   if(isMobile()) {
@@ -50,7 +44,7 @@ const Button = ({ color, size, top, left, label, position, arrow, type }) => {
         })}
         style={{ top, left }}
         onTouchStart={memoHandleDown}
-        onTouchEnd={handleUp}
+        onTouchEnd={memoHandleUp}
       >
         <i className={cn({ [style.active]: active })}/>
         {size === 's1' && (
@@ -73,7 +67,7 @@ const Button = ({ color, size, top, left, label, position, arrow, type }) => {
         })}
         style={{ top, left }}
         onMouseDown={memoHandleDown}
-        onMouseUp={handleUp}
+        onMouseUp={memoHandleUp}
       >
         <i className={cn({ [style.active]: active })}/>
         {size === 's1' && (
@@ -89,6 +83,17 @@ const Button = ({ color, size, top, left, label, position, arrow, type }) => {
   }
 
   return rendered
+}
+
+Button.propTypes = {
+  color: PropTypes.string.isRequired,
+  size: PropTypes.string.isRequired,
+  top: PropTypes.number.isRequired,
+  left: PropTypes.number.isRequired,
+  label: PropTypes.string.isRequired,
+  position: PropTypes.bool,
+  arrow: PropTypes.string,
+  type: PropTypes.string.isRequired,
 }
 
 export default Button

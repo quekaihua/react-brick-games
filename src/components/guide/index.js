@@ -36,7 +36,7 @@ const Guide = () => {
       </div>
       <div className={`${style.guide} ${style.left}`}>
         <p>
-          <h3>查看源码:</h3>
+          <span>查看源码:</span>
           <a href="https://github.com/quekaihua/react-brick-games" >https://github.com/quekaihua/react-brick-games</a>
         </p>
         <div className={style.space}>SPACE</div>

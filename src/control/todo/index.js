@@ -11,6 +11,8 @@ import { setSnake } from '../../store/reducer/snakeSlice'
 import { createNewSnake } from '../../games/snake/snake'
 import { setShooting } from '../../store/reducer/shootingSlice'
 import { createNewShooting } from '../../games/shooting/shooting'
+import { createNewBreakout, initPaddleY, initX, initY } from '../../games/breakout/breakout'
+import { setBreakout } from '../../store/reducer/breakoutSlice'
 
 const left = () => {
   const state = store.getState()
@@ -59,6 +61,9 @@ const p = () => {
   } else if(games[game].name === 'shooting') {
     const newShooting = createNewShooting({ levels: levels })
     store.dispatch(setShooting(newShooting.toJsObj()))
+  }else if(games[game].name === 'breakout') {
+    const newBreakout = createNewBreakout({ x: initX, y: initY, paddleY: initPaddleY })
+    store.dispatch(setBreakout(newBreakout.toJsObj()))
   }
   store.dispatch(setPause(newPause))
 }

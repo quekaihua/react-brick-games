@@ -1,6 +1,7 @@
 import React from 'react'
 import style from './index.module.less'
 import Button from './button'
+import PropTypes from 'prop-types'
 
 const Keyboard = ({ filling }) => {
   return (
@@ -84,6 +85,10 @@ const Keyboard = ({ filling }) => {
       />
     </div>
   )
+}
+
+Keyboard.propTypes = {
+  filling: PropTypes.number.isRequired,
 }
 
 export default Keyboard

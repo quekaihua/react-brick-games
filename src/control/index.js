@@ -2,13 +2,16 @@ import todo from './todo'
 import snake from './snake'
 import tetris from './tetris'
 import shooting from './shooting'
+import breakout from './breakout'
 
 //长按
 const eventLoop = {}
 
-const clearLoop = (type) => {
-  clearTimeout(eventLoop[type])
-  eventLoop[type] = null
+const clearLoop = () => {
+  Object.keys(eventLoop).forEach(key => {
+    clearTimeout(eventLoop[key])
+    eventLoop[key] = null
+  })
 }
 
 export default {
@@ -16,6 +19,7 @@ export default {
   snake,
   tetris,
   shooting,
+  breakout,
   eventLoop,
   clearLoop
 }

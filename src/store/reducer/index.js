@@ -8,6 +8,7 @@ import tetris from './tetrisSlice'
 import lock from './lockSlice'
 import snake from './snakeSlice'
 import shooting from './shootingSlice'
+import breakout from './breakoutSlice'
 
 export default {
   levels,
@@ -19,5 +20,6 @@ export default {
   tetris,
   lock,
   snake,
-  shooting
+  shooting,
+  breakout
 }

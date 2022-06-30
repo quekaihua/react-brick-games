@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import cn from 'classnames'
+import PropTypes from 'prop-types'
 
 import style from './index.module.less'
 
@@ -30,6 +31,10 @@ const Pause = ({ pause }) => {
       })}
     />
   )
+}
+
+Pause.propTypes = {
+  pause: PropTypes.number.isRequired
 }
 
 export default Pause

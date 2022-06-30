@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import cn from 'classnames'
+import PropTypes from 'prop-types'
 
 import style from './index.module.less'
 
@@ -37,6 +38,16 @@ const Number = ({ number, length, time }) => {
     num.unshift('n')
   }
   return renderNumber(num)
+}
+
+Number.propTypes = {
+  number: PropTypes.number,
+  length: PropTypes.number,
+  time: PropTypes.bool,
+}
+
+Number.defaultProps = {
+  length: 6,
 }
 
 export default Number

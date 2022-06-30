@@ -1,6 +1,6 @@
 import React from 'react'
 import style from './index.module.less'
-
+import PropTypes from 'prop-types'
 const Welcome = ({ game }) => {
   return (
     <div className={style.welcome}>
@@ -14,6 +14,10 @@ const Welcome = ({ game }) => {
       </div>
     </div>
   )
+}
+
+Welcome.propTypes = {
+  game: PropTypes.string.isRequired
 }
 
 export default Welcome

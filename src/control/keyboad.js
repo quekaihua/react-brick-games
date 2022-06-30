@@ -40,7 +40,7 @@ const keyUp = (e) => {
   }
   const type = keyboard[e.keyCode]
   if (type === keydownActive) {
-    control.clearLoop(type)
+    control.clearLoop()
     keydownActive = ''
   }
 }
