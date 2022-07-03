@@ -14,6 +14,8 @@ import { transform } from '../utils/const'
 import Logo from '../components/logo'
 import Guide from '../components/guide'
 import BreakoutPanel from '../components/breakout-panel'
+import RacingPanel from '../components/rancing-panel'
+import TankPanel from '../components/tank-panel'
 
 const App = () => {
   const state = useSelector((state) => state, shallowEqual)
@@ -57,7 +59,9 @@ const App = () => {
             {games[game].name === 'tetris' && <TetrisPanel />}
             {games[game].name === 'snake' && <SnakePanel />}
             {games[game].name === 'shooting' && <ShootingPanel />}
+            {games[game].name === 'racing' && <RacingPanel />}
             {games[game].name === 'breakout' && <BreakoutPanel />}
+            {games[game].name === 'tank' && <TankPanel />}
             {pause === 0 && <Welcome game={games[game].name.toUpperCase()} />}
             <div className={style.state}>
               {

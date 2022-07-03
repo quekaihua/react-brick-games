@@ -9,6 +9,8 @@ import lock from './lockSlice'
 import snake from './snakeSlice'
 import shooting from './shootingSlice'
 import breakout from './breakoutSlice'
+import racing from './racingSlice'
+import tank from './tankSlice'
 
 export default {
   levels,
@@ -21,5 +23,7 @@ export default {
   lock,
   snake,
   shooting,
-  breakout
+  breakout,
+  racing,
+  tank
 }

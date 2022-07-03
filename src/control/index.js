@@ -3,6 +3,8 @@ import snake from './snake'
 import tetris from './tetris'
 import shooting from './shooting'
 import breakout from './breakout'
+import racing from './racing'
+import tank from './tank'
 
 //长按
 const eventLoop = {}
@@ -20,6 +22,8 @@ export default {
   tetris,
   shooting,
   breakout,
+  racing,
+  tank,
   eventLoop,
   clearLoop
 }

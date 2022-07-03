@@ -13,6 +13,10 @@ import { setShooting } from '../../store/reducer/shootingSlice'
 import { createNewShooting } from '../../games/shooting/shooting'
 import { createNewBreakout, initPaddleY, initX, initY } from '../../games/breakout/breakout'
 import { setBreakout } from '../../store/reducer/breakoutSlice'
+import { createNewRacing } from '../../games/racing'
+import { setRacing } from '../../store/reducer/racingSlice'
+import { createNewTank } from '../../games/tank/tank'
+import { setTank } from '../../store/reducer/tankSlice'
 
 const left = () => {
   const state = store.getState()
@@ -64,6 +68,12 @@ const p = () => {
   }else if(games[game].name === 'breakout') {
     const newBreakout = createNewBreakout({ x: initX, y: initY, paddleY: initPaddleY })
     store.dispatch(setBreakout(newBreakout.toJsObj()))
+  }else if(games[game].name === 'racing') {
+    const newRacing = createNewRacing({})
+    store.dispatch(setRacing(newRacing.toJsObj()))
+  }else if(games[game].name === 'tank') {
+    const newTank = createNewTank()
+    store.dispatch(setTank(newTank.toJsObj()))
   }
   store.dispatch(setPause(newPause))
 }
