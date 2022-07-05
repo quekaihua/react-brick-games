@@ -1,70 +1,62 @@
-# Getting Started with Create React App
+## 用React、Redux做经典的方块游戏
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+----
+本项目灵感来源于 React 版的[俄罗斯方块](https://github.com/chvin/react-tetris),本项目全部用React函数式组件重构，使用Hook模拟生命周期,状态用redux调度
 
-## Available Scripts
+戳：[https://quekaihua.github.io/brick-game/](https://quekaihua.github.io/brick-game/) 玩一玩！
 
-In the project directory, you can run:
+----
+### 效果预览
+![效果预览](https://img.alicdn.com/tps/TB1Ag7CNXXXXXaoXXXXXXXXXXXX-320-483.gif)
 
-### `npm start`
+正常速度的录制，体验流畅。
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### 坦克大战
+![tank](./src/resource/image/tank.gif)
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### 赛车游戏
+![racing](./src/resource/image/racing.gif)
 
-### `npm test`
+### 射击游戏
+![shooting](./src/resource/image/fighting.gif)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### 贪吃蛇
+![snake](./src/resource/image/snake.gif)
 
-### `npm run build`
+### 弹珠游戏
+![breakout](./src/resource/image/breakout.gif)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### 响应式
+![响应式](https://img.alicdn.com/tps/TB1AdjZNXXXXXcCapXXXXXXXXXX-480-343.gif)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+不仅指屏幕的自适应，而是`在PC使用键盘、在手机使用手指的响应式操作`：
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+![手机](https://img.alicdn.com/tps/TB1kvJyOVXXXXbhaFXXXXXXXXXX-320-555.gif)
 
-### `npm run eject`
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### Redux 状态预览（[Redux DevTools extension](https://github.com/zalmoxisus/redux-devtools-extension)）
+![Redux状态预览](https://img.alicdn.com/tps/TB1hGQqNXXXXXX3XFXXXXXXXXXX-640-381.gif)
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Redux设计管理了所有应存的状态。
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+----
+## 开发
+### 安装
+```
+npm install
+```
+### 运行
+```
+npm start
+```
+浏览自动打开 [http://127.0.0.1:3000/](http://127.0.0.1:3000/)
+### 打包编译
+```
+npm run build
+```
 
-## Learn More
+在build文件夹下生成结果。
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-To learn React, check out the [React documentation](https://reactjs.org/).
 
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
